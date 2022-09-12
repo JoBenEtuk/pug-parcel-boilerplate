@@ -2,12 +2,13 @@
 // @import 'splitting/dist/splitting-cells.css';
 
 @import './base/reset';
-@import './base/base';
 
 @import 'utils/variables';
 @import 'utils/functions';
 @import 'utils/mixins';
 @import 'utils/utils';
+
+@import './base/base';
 
 @import 'shared/links';
 @import 'shared/sections';
