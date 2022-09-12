@@ -1,19 +1,15 @@
 .home {
-  @extend %cover;
-  @extend %page;
+	@extend %cover;
+	@extend %page;
 
-  transition: opacity 0.4s ease, visibility 0.4s ease;
+	transition: opacity 0.4s ease, visibility 0.4s ease;
 
-  &--active {
-    @extend %page--active;
-  }
+	&--active {
+		@extend %page--active;
+	}
 }
 
 .home__wrapper {
-  @extend %cover;
-  height: auto;
-
-  &__inner {
-    height: 200vh;
-  }
+	@extend %cover;
+	height: auto;
 }
