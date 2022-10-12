@@ -1,8 +1,15 @@
 .preloader {
+	@extend %cover;
 	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
 	z-index: z('preloader');
+	&__wrapper {
+		@extend %cover;
+		@extend %center;
+		background: #000;
+		color: #fff;
+
+		p {
+			font-size: 3rem;
+		}
+	}
 }

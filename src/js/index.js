@@ -19,6 +19,11 @@ class App {
 		this.addLinksEventsListeners()
 
 		this.onResize()
+
+		this.mouse = {
+			x: window.innerWidth / 2,
+			y: window.innerHeight / 2,
+		}
 	}
 
 	createPages() {

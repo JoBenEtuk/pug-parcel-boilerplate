@@ -189,4 +189,7 @@ export default class Page extends EventEmitter {
 			this.transform(this.elements.wrapper, this.scroll.current)
 		}
 	}
+
+	addEventListeners() {}
+	removeEventListeners() {}
 }

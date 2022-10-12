@@ -24,8 +24,12 @@ body {
 	font-family: 'sans-serif';
 	background-color: $col-white;
 	color: $col-black;
+	overflow-x: hidden;
 
 	transition: all 300ms $ease-in-out;
+	height: 100%;
+	overscroll-behavior: none;
+	width: 100%;
 }
 
 a {

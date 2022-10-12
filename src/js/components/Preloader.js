@@ -37,37 +37,68 @@ export default class Preloader extends Component {
 				this.length < 99 ? (this.length += 1) : (this.length = 100)
 				this.elements.numberText.innerHTML = `${this.length}%`
 			}, 27)
+
+			gsap
+				.timeline()
+				.to(this.element, {
+					opacity: 1,
+					duration: 3,
+				})
+				.call(() => this.onLoaded())
 		}
 	}
 
-	onAssetLoaded(image) {
+	// Preloading
+	onAssetLoaded() {
 		this.length += 1
 
 		const percent = this.length / this.images.length
-		this.elements.number.innerHTML = `${Math.round(percent * 100)}%`
+
+		const wrapperWidth = this.elements.numberWrapper.offsetWidth
+		const numberWidth = this.elements.numberText.offsetWidth
+		const width = wrapperWidth - numberWidth - 20
+
+		const translateX = width * percent
+
+		this.elements.numberText.innerHTML = `${Math.round(percent * 100)}%`
+
+		gsap.to(this.elements.numberText, {
+			duration: 0.2,
+			ease: 'none',
+			x: translateX,
+		})
 
 		if (percent === 1) {
-			this.onLoaded()
+			setTimeout(() => {
+				this.onLoaded()
+			}, 1000)
 		}
 	}
 
 	onLoaded() {
-		this.emit('completed')
+		this.interval = setInterval(() => {
+			this.counter < 99 ? (this.counter += 1) : (this.counter = 100)
+			this.elements.numberText.innerHTML = `${this.counter}%`
+		}, 27)
+
 		const tl = gsap.timeline({
 			onComplete: () => {
 				this.destroy()
+				// this.createAnimation()
 			},
 		})
-		// .call((_) => this.emit("completed"));
 
 		tl.to(this.element, {
-			duration: 0.5,
-			autoAlpha: 0,
-			ease: 'power3.out',
-		})
+			x: '100vw',
+			duration: 1.5,
+			ease: 'expo.in',
+		}).call((_) => this.emit('completed'))
 	}
 
 	destroy() {
 		this.element.parentNode.removeChild(this.element)
+		setTimeout(() => {
+			clearInterval(this.interval)
+		}, 4000)
 	}
 }
