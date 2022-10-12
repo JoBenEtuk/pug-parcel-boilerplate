@@ -1,85 +1,73 @@
-import Component from "../classes/Component";
-import gsap from "gsap";
+import Component from '../classes/Component'
+import gsap from 'gsap'
 
 export default class Preloader extends Component {
-  constructor() {
-    super({
-      element: ".preloader",
-      elements: {
-        title: ".preloader__text",
-        numberWrapper: ".preloader__number__wrapper",
-        numberText: ".preloader__number",
-      },
-    });
+	constructor() {
+		super({
+			element: '.preloader',
+			elements: {
+				title: '.preloader__text',
+				numberWrapper: '.preloader__number__wrapper',
+				numberText: '.preloader__number',
+			},
+		})
 
-    this.images = [...document.querySelectorAll("[data-src]")];
+		this.images = [...document.querySelectorAll('[data-src]')]
 
-    this.length = 0;
+		this.length = 0
+		this.interval
+		this.createLoader()
+	}
 
-    // this.createTransition();
-    this.createLoader();
-  }
+	createLoader() {
+		if (this.images.length > 0) {
+			this.images.forEach((image) => {
+				const media = new window.Image()
+				const src = image.getAttribute('data-src')
+				media.crossOrigin = 'anonymous'
+				media.src = src
 
-  // createTransition() {
-  //   this.transition.show();
-  // }
+				media.onload = (_) => {
+					image.setAttribute('src', src)
+					this.onAssetLoaded()
+				}
+			})
+		} else {
+			this.interval = setInterval(() => {
+				this.length < 99 ? (this.length += 1) : (this.length = 100)
+				this.elements.numberText.innerHTML = `${this.length}%`
+			}, 27)
+		}
+	}
 
-  createLoader() {
-    this.images.forEach((image) => {
-      const media = new window.Image();
-      const src = image.getAttribute("data-src");
-      media.crossOrigin = "anonymous";
-      media.src = src;
+	onAssetLoaded(image) {
+		this.length += 1
 
-      media.onload = (_) => {
-        image.setAttribute("src", src);
-        this.onAssetLoaded();
-      };
-    });
-  }
+		const percent = this.length / this.images.length
+		this.elements.number.innerHTML = `${Math.round(percent * 100)}%`
 
-  onAssetLoaded() {
-    this.length += 1;
+		if (percent === 1) {
+			this.onLoaded()
+		}
+	}
 
-    const percent = this.length / this.images.length;
+	onLoaded() {
+		this.emit('completed')
+		const tl = gsap.timeline({
+			onComplete: () => {
+				this.destroy()
+			},
+		})
+		// .call((_) => this.emit("completed"));
 
-    const wrapperWidth = this.elements.numberWrapper.offsetWidth;
-    const numberWidth = this.elements.numberText.offsetWidth;
-    const width = wrapperWidth - numberWidth - 20;
+		tl.to(this.element, {
+			duration: 0.5,
+			autoAlpha: 0,
+			ease: 'power3.out',
+		})
+	}
 
-    const translateX = width * percent;
-
-    this.elements.numberText.innerHTML = `${Math.round(percent * 100)}%`;
-
-    gsap.to(this.elements.numberText, {
-      duration: 0.2,
-      ease: "none",
-      x: translateX,
-    });
-
-    if (percent === 1) {
-      setTimeout(() => {
-        this.onLoaded();
-      }, 1000);
-    }
-  }
-
-  onLoaded() {
-    this.emit("completed");
-    const tl = gsap.timeline({
-      onComplete: () => {
-        this.destroy();
-      },
-    });
-
-    tl.to(this.element, {
-      duration: 0.5,
-      autoAlpha: 0,
-      ease: "power3.out",
-    });
-  }
-
-  destroy() {
-    this.element.parentNode.removeChild(this.element);
-  }
+	destroy() {
+		this.element.parentNode.removeChild(this.element)
+	}
 }

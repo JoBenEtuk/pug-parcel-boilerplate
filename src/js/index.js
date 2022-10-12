@@ -12,32 +12,32 @@ class App {
 
 		this.url = window.location.pathname
 
-		this.mouse = {
-			x: window.innerWidth / 2,
-			y: window.innerHeight / 2,
-		}
-
 		this.createPreloader()
-
-		this.pages = {
-			'/': new Home(),
-			'/about': new About(),
-		}
-
-		// if (this.url.indexOf("/case") > -1) {
-		//   this.page = this.case;
-		//   this.page.onResize();
-		// } else {
-		this.page = this.pages[this.url]
-		// }
-
-		this.page.show(this.url)
+		this.createPages()
 
 		this.addEventListeners()
 		this.addLinksEventsListeners()
-		this.update()
 
 		this.onResize()
+	}
+
+	createPages() {
+		this.home = new Home()
+		this.about = new About()
+		// this.works = new Works();
+		// this.details = new Details();
+
+		this.pages = {
+			'/': this.home,
+			'/about': this.about,
+			//   "/works": this.works,
+		}
+
+		if (this.url.includes('/works/')) {
+			this.page = this.details
+		} else {
+			this.page = this.pages[this.url]
+		}
 	}
 
 	createPreloader() {
@@ -54,13 +54,10 @@ class App {
 	createHome() {
 		this.home = new Home()
 	}
+
 	createAbout() {
 		this.about = new About()
 	}
-
-	// createCase() {
-	//   this.case = new Case();
-	// }
 
 	async onChange({ push = true, url = null }) {
 		url = url.replace(window.location.origin, '')
@@ -81,8 +78,8 @@ class App {
 			window.history.pushState({}, document.title, url)
 		}
 
-		if (this.url.indexOf('/case') > -1) {
-			this.page = this.case
+		if (this.url.includes('/works/')) {
+			this.page = this.works
 		} else {
 			this.page = this.pages[this.url]
 		}
@@ -149,17 +146,6 @@ class App {
 		if (this.page && this.page.onTouchUp) {
 			this.page.onTouchUp(event)
 		}
-	}
-
-	/**
-	 * Loop
-	 */
-	update() {
-		if (this.page) {
-			this.page.update()
-		}
-
-		window.requestAnimationFrame(this.update)
 	}
 
 	/**

@@ -1,8 +1,10 @@
 html {
-	@extend %cover;
-	position: fixed;
-	overflow: hidden;
+	overflow-x: hidden;
+	height: 100%;
+	width: 100%;
+
 	overscroll-behavior: none;
+	scroll-behavior: smooth;
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-font-smoothing: antialiased;
 
@@ -19,9 +21,6 @@ html {
 }
 
 body {
-	@extend %cover;
-	position: fixed;
-
 	font-family: 'sans-serif';
 	background-color: $col-white;
 	color: $col-black;
@@ -33,6 +32,7 @@ a {
 	color: inherit;
 	outline: none;
 	text-decoration: none;
+	cursor: pointer;
 }
 
 canvas {
@@ -47,10 +47,6 @@ button {
 	color: inherit;
 	cursor: pointer;
 	outline: none;
-}
-
-.content {
-	@extend %cover;
 }
 
 [data-animation='label'],
