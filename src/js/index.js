@@ -2,6 +2,7 @@ import AutoBind from 'auto-bind'
 import each from 'lodash/each'
 import Detection from './classes/Detection'
 import Preloader from './components/Preloader'
+import Transition from './components/Transition'
 
 import Home from './pages/Home'
 import About from './pages/About'
@@ -14,6 +15,7 @@ class App {
 
 		this.createPreloader()
 		this.createPages()
+		this.createTransition()
 
 		this.addEventListeners()
 		this.addLinksEventsListeners()
@@ -56,20 +58,14 @@ class App {
 		this.page.show()
 	}
 
-	createHome() {
-		this.home = new Home()
-	}
-
-	createAbout() {
-		this.about = new About()
+	createTransition() {
+		this.transition = new Transition()
 	}
 
 	async onChange({ push = true, url = null }) {
 		url = url.replace(window.location.origin, '')
 
-		if (this.isFetching || this.url === url) return
-
-		this.isFetching = true
+		await this.transition.show()
 
 		this.url = url
 
@@ -91,8 +87,7 @@ class App {
 
 		this.onResize()
 		await this.page.show(this.url)
-
-		this.isFetching = false
+		this.transition.hide()
 	}
 
 	/**
